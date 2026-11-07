@@ -1,0 +1,12 @@
+# Graph validation buildings
+
+  Library 
+student Union
+Gym
+Room #5
+Far  Wing
+Far Wing
+LIBRARY
+Extra|Field
+  	
+Observatory
