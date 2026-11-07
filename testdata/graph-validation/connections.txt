@@ -1,0 +1,15 @@
+# Graph validation connections
+library|GYM
+Library| student union
+gym| library
+student union|library
+Library|LIBRARY
+Library|Missing
+Gym|
+|Gym
+Library|Gym|unexpected
+Broken
+Gym|Room #5
+Far  Wing|Far Wing
+  	
+student union|Gym
