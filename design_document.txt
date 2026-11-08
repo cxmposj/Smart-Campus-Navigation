@@ -31,6 +31,7 @@ The campus information is loaded from four text files provided for the project. 
   2. connections.txt
   3. facilities.txt
   4. departments.txt
+
 Each files contains information needed for a different part of the system. The program reads the files and uses their information when displaying facilities, navigating buildings, and working with departments. 
 
 # Project Organization 
