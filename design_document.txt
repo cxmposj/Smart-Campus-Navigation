@@ -1,0 +1,38 @@
+# Smart Campus Navigation Facility Analytics System Design Document
+
+# Project Design
+
+The project is divided into different parts to keep the campus information organized. Each class is responsible for handling its own information and functions. The main program connects these parts together and allows users to access the different features through the menu. 
+
+# Facility Records
+
+The Facility class is used to stored information about campus facilities. Each facility has an ID, name, building, and category. The class also includes functions to get and display the facility information. 
+
+# Hash Table
+
+The HashTable class is stored facilities based on their IDs. A custom hash function is used to find where each facility should be stored. When two IDs end up in the same position, linear probing is used to find another available position. The table also checks for duplicate IDs before adding a facility. 
+
+# Campus Graph 
+
+The campus graph represented the buildings and how they connect to each other. Each building is stored as a vertex, and the connections between buildings are stored as edges. An adjacency list is used to keep track of which buildings are connected. The connections work in both directions.
+
+# BFS
+
+BFS is used to find which buildings can be reached from a starting building. It uses a queue to keep track of which building to visit next. The search visits nearby buildings first and then continues to the next ones. It also keeps track of the distance from the starting building. 
+
+# Department Tree
+
+The department tree organized the university departments and their parent departments. The University is at the top of the tree, and other departments are placed under their parent. The tree allows departments to be added and searched, and it can display the department hierarchy using preorder traversal. 
+
+# Input Files
+
+The campus information is loaded from four text files provided for the project. The files are loaded in this order: 
+  1. buildings.txt
+  2. connections.txt
+  3. facilities.txt
+  4. departments.txt
+Each files contains information needed for a different part of the system. The program reads the files and uses their information when displaying facilities, navigating buildings, and working with departments. 
+
+# Project Organization 
+
+The project keeps the header files, source files, input files, and test files. This helps keep the code organized and makes it easier to find and update different parts of the project. 
