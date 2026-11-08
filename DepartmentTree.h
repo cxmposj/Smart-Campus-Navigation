@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-uaing namespace std;
+using namespace std;
 
 struct Department {                     // This stores a department and its child departments
     string deptName;
