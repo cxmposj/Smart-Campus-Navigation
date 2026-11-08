@@ -1,0 +1,7 @@
+# Smart Campus Navigation and facility Analytics System
+
+# Team Contributions Milestone 1
+
+Jose Campos - I handled the facility portion of the project, such as organizing the facility information and setting up how 
+records would be stored and accessed. I also worked on making sure the facility data followed the required format and validation rules.
+
