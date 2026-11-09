@@ -18,3 +18,12 @@ Rodney Amuebie:
 - Added department statistics, including total departments, leaves, and tree height.
 - Tested normal operations and error cases.
 - Documented all 12 DepartmentTree test results in testing_results.txt.
+
+Adeoluwa Olukotun:
+- Implemented the CampusGraph class using an adjacency list.
+- Added loading and validation for buildings.txt and connections.txt.
+- Added checks for duplicate buildings, invalid connections, self-loops, and reversed duplicate edges.
+- Added graph display, building and connection counts, and each building's degree.
+- Implemented BFS to show reachable buildings and their distances from the starting building.
+- Added a separate graph demo and tests for valid data, invalid files, isolated buildings, repeated searches, and larger graphs. All 10 local test groups passed.
+- Added the graph code, tests, and sample validation files through a pull request that was merged into main.
