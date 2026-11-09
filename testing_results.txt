@@ -86,3 +86,88 @@ INTEGRATED PROJECT TEST RESULTS
 12. Menu Navigation and Exit - PASS
 
 OVERALL RESULT: INTEGRATED PROGRAM TESTED SUCCESSFULLY
+
+# Facilities Records
+These are results that showed when the facilities loaded, displayed their information, and searched by their ID.
+
+Facility loading complete.
+Facilities loaded: 10
+Facilities rejected: 0
+
+Position 13:
+Facility ID: F001
+Facility Name: Main Reading Room
+Building: Library
+Category: Library
+
+Position 14:
+Facility ID: F002
+Facility Name: Tutoring Center
+Building: Library
+Category: Tutoring Center
+
+Position 15:
+Facility ID: F003
+Facility Name: Student Services Office
+Building: Student Union
+Category: Student Services Office
+
+Position 16:
+Facility ID: F004
+Facility Name: Computer Lab A
+Building: Science Building
+Category: Computer Lab
+
+Position 17:
+Facility ID: F005
+Facility Name: Room 101
+Building: Engineering Building
+Category: Classroom
+
+Position 18:
+Facility ID: F006
+Facility Name: Computer Lab B
+Building: Engineering Building
+Category: Computer Lab
+
+Position 19:
+Facility ID: F007
+Facility Name: Room 101
+Building: Business Building
+Category: Classroom
+
+Position 20:
+Facility ID: F008
+Facility Name: Fitness Center
+Building: Gym
+Category: Recreation
+
+Position 21:
+Facility ID: F009
+Facility Name: Room 205
+Building: Science Building
+Category: Classroom
+
+Position 22:
+Facility ID: F010
+Facility Name: Research Help Desk
+Building: Library
+Category: Library
+
+Facility Found
+Facility ID: F004
+Facility Name: Computer Lab A
+Building: Science Building
+Category: Computer Lab
+
+Facility Found
+Facility ID: F004
+Facility Name: Computer Lab A
+Building: Science Building
+Category: Computer Lab
+
+Facility not found.
+
+Facilities stored: 10
+Table capacity: 101
+Total collisions: 9
