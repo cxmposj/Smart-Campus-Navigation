@@ -79,7 +79,7 @@ Facility* HashTable::searchFac(string facID) {     // It searches for a facility
     }
 
     if (facID == "") {
-        return nullptr;3
+        return nullptr;
     }
 
     int index = hashFunc(facID);

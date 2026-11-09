@@ -1,16 +1,17 @@
+
 #include "Facility.h"
 #include <iostream>
+
 using namespace std;
 
-Facility::Facility() {      // The default constructor of the facility information
-   
+Facility::Facility() {
     facID = "";
     facName = "";
-    buidlingName = "";
-    facCategory = "" :
+    buildingName = "";
+    facCategory = "";
 }
 
-Facility::Facility(string newID, string newName, string newBuilding, string newCategory) {     //The constructor that saves the details about the facility
+Facility::Facility(string newID, string newName, string newBuilding, string newCategory) {
     facID = newID;
     facName = newName;
     buildingName = newBuilding;
@@ -18,19 +19,22 @@ Facility::Facility(string newID, string newName, string newBuilding, string newC
 }
 
 string Facility::getFacID() const {
-    return facID;                                   // Returns the ID of the facility
+    return facID;
 }
-string Facility::getFacName() const {              
-    return facName;                                 
+
+string Facility::getFacName() const {
+    return facName;
 }
-string Facility::getBuildingName() const {        // Gets the name and returns the name 
-    return buidlingName;
+
+string Facility::getBuildingName() const {
+    return buildingName;
 }
-string Facility::getFacCategory() const{          // Gets the category of the facility
+
+string Facility::getFacCategory() const {
     return facCategory;
 }
 
-void Facility::displayFacility() const{            //This would display all the stored facility details
+void Facility::displayFacility() const {
     cout << "Facility ID: " << facID << endl;
     cout << "Facility Name: " << facName << endl;
     cout << "Building: " << buildingName << endl;

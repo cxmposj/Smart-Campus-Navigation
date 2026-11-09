@@ -67,3 +67,22 @@ Status: All manual tests passed
     duplicate departments, and additional root records.
 
 OVERALL RESULT: ALL 12 TESTS PASSED
+INTEGRATED PROJECT TEST RESULTS
+
+1. Department Loading - PASS
+2. Department Search - PASS
+3. Department Hierarchy Display - PASS
+4. Campus Building Loading - PASS
+   Successfully loaded 7 buildings.
+5. Campus Connection Loading - PASS
+   Successfully loaded 6 connections.
+6. Building Statistics - PASS
+7. Building Reachability - PASS
+8. Facility Loading - PASS
+   Successfully loaded 10 facilities.
+9. Facility Display - PASS
+10. Facility Search - PASS
+11. Hash Table Statistics - PASS
+12. Menu Navigation and Exit - PASS
+
+OVERALL RESULT: INTEGRATED PROGRAM TESTED SUCCESSFULLY

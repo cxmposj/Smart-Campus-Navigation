@@ -1,50 +1,260 @@
 
 #include "DepartmentTree.h"
+#include "CampusGraph.h"
+#include "Facility.h"
+#include "HashTable.h"
+
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <limits>
 
 using namespace std;
 
+// Removes whitespace from the beginning and end of a string.
+string trimText(const string& value) {
+    const string whitespace = " \t\r\n";
+    size_t first = value.find_first_not_of(whitespace);
+
+    if (first == string::npos) {
+        return "";
+    }
+
+    size_t last = value.find_last_not_of(whitespace);
+    return value.substr(first, last - first + 1);
+}
+
+// Splits a facility record using the | separator.
+vector<string> splitFacilityLine(const string& line) {
+    vector<string> fields;
+    string field;
+    stringstream stream(line);
+
+    while (getline(stream, field, '|')) {
+        fields.push_back(trimText(field));
+    }
+
+    return fields;
+}
+
+// Loads facilities into the hash table.
+void loadFacilities(HashTable& table, const CampusGraph& graph) {
+    ifstream file("data/facilities.txt");
+
+    if (!file.is_open()) {
+        cout << "Error: Could not open data/facilities.txt\n";
+        return;
+    }
+
+    string line;
+    int loaded = 0;
+    int rejected = 0;
+    int lineNumber = 0;
+
+    while (getline(file, line)) {
+        lineNumber++;
+
+        line = trimText(line);
+
+        if (line.empty() || line[0] == '#') {
+            continue;
+        }
+
+        vector<string> fields = splitFacilityLine(line);
+
+        if (fields.size() != 4) {
+            cout << "Warning: Invalid facility record on line "
+                 << lineNumber << ".\n";
+            rejected++;
+            continue;
+        }
+
+        string facilityID = fields[0];
+        string facilityName = fields[1];
+        string buildingName = fields[2];
+        string category = fields[3];
+
+        if (facilityID.empty() || facilityName.empty() ||
+            buildingName.empty() || category.empty()) {
+            cout << "Warning: Missing facility information on line "
+                 << lineNumber << ".\n";
+            rejected++;
+            continue;
+        }
+
+        string canonicalBuilding;
+
+        if (!graph.findBuilding(buildingName, canonicalBuilding)) {
+            cout << "Warning: Building not found for facility "
+                 << facilityID << ".\n";
+            rejected++;
+            continue;
+        }
+
+        Facility facility(
+            facilityID,
+            facilityName,
+            canonicalBuilding,
+            category
+        );
+
+        if (table.addFac(facility)) {
+            loaded++;
+        } else {
+            cout << "Warning: Could not add facility "
+                 << facilityID << ".\n";
+            rejected++;
+        }
+    }
+
+    cout << "\nFacility loading complete.\n";
+    cout << "Facilities loaded: " << loaded << endl;
+    cout << "Facilities rejected: " << rejected << endl;
+}
+
+// Displays the main menu.
+void displayMenu() {
+    cout << "\n========== SMART CAMPUS NAVIGATION ==========\n";
+    cout << "1. Display department hierarchy\n";
+    cout << "2. Search for a department\n";
+    cout << "3. Display campus buildings and connections\n";
+    cout << "4. Display building statistics\n";
+    cout << "5. Find reachable buildings\n";
+    cout << "6. Display all facilities\n";
+    cout << "7. Search for a facility by ID\n";
+    cout << "8. Display hash table statistics\n";
+    cout << "9. Exit\n";
+    cout << "Enter your choice: ";
+}
+
 int main() {
 
-    cout << "========== NORMAL DEPARTMENT TESTS ==========" << endl;
+    // Initialize the department tree.
+    DepartmentTree departmentTree;
 
-    DepartmentTree tree;
+    cout << "Loading departments...\n";
+    departmentTree.loadDepartments("data/departments.txt");
 
-    tree.loadDepartments("data/departments.txt");
+    // Initialize the campus graph.
+    CampusGraph campusGraph;
 
-    tree.displayTree();
-    tree.displayPreorder();
-    tree.displayPostorder();
-    tree.displayLevelOrder();
-    tree.displayStats();
+    cout << "\nLoading campus buildings...\n";
+    campusGraph.loadBuildings("data/buildings.txt", cout);
 
-    cout << "\n========== ERROR-CASE TESTS ==========" << endl;
+    cout << "\nLoading campus connections...\n";
+    campusGraph.loadConnections("data/connections.txt", cout);
 
-    // Test 1: Search for a department that does not exist.
-    cout << "\nTest 1: Search for missing department" << endl;
-    tree.searchDept("Business Administration");
+    // Initialize the facility hash table.
+    HashTable facilityTable(101);
 
-    // Test 2: Attempt to add a duplicate department.
-    cout << "\nTest 2: Add duplicate department" << endl;
-    tree.addDept("Computer Science", "College of Engineering");
+    cout << "\nLoading campus facilities...\n";
+    loadFacilities(facilityTable, campusGraph);
 
-    // Test 3: Attempt to add a department with an unknown parent.
-    cout << "\nTest 3: Add department with unknown parent" << endl;
-    tree.addDept("Artificial Intelligence", "Unknown College");
+    int choice = 0;
 
-    // Test 4: Test an empty department file.
-    cout << "\nTest 4: Load empty department file" << endl;
-    DepartmentTree emptyTree;
-    emptyTree.loadDepartments("data/empty_departments.txt");
-    emptyTree.displayTree();
-    emptyTree.displayStats();
+    while (true) {
 
-    // Test 5: Test a file containing invalid records.
-    cout << "\nTest 5: Load file with invalid records" << endl;
-    DepartmentTree invalidTree;
-    invalidTree.loadDepartments("data/invalid_departments.txt");
-    invalidTree.displayTree();
+        displayMenu();
+
+        if (!(cin >> choice)) {
+            if (cin.eof()) {
+                cout << "\nInput ended. Exiting program.\n";
+                break;
+            }
+
+            cout << "\nInvalid input. Please enter a number.\n";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            continue;
+        }
+
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+        switch (choice) {
+
+            case 1:
+                cout << "\nDepartment Hierarchy\n";
+                departmentTree.displayTree();
+                break;
+
+            case 2: {
+                string departmentName;
+
+                cout << "Enter department name: ";
+                getline(cin, departmentName);
+
+                departmentTree.searchDept(departmentName);
+                break;
+            }
+
+            case 3:
+                cout << "\nCampus Buildings and Connections\n";
+                campusGraph.displayGraph(cout);
+                break;
+
+            case 4:
+                cout << "\nBuilding Statistics\n";
+                campusGraph.displayCountsAndDegrees(cout);
+                break;
+
+            case 5: {
+                string buildingName;
+
+                cout << "Enter starting building: ";
+                getline(cin, buildingName);
+
+                cout << "\nReachable Buildings\n";
+                campusGraph.displayReachable(buildingName, cout);
+                break;
+            }
+
+            case 6:
+                cout << "\nAll Campus Facilities\n";
+                facilityTable.displayTable();
+
+                if (facilityTable.getFacCount() == 0) {
+                    cout << "No facilities are currently loaded.\n";
+                }
+                break;
+
+            case 7: {
+                string facilityID;
+
+                cout << "Enter facility ID: ";
+                getline(cin, facilityID);
+
+                Facility* facility = facilityTable.searchFac(facilityID);
+
+                if (facility != nullptr) {
+                    cout << "\nFacility Found\n";
+                    facility->displayFacility();
+                } else {
+                    cout << "Facility not found.\n";
+                }
+
+                break;
+            }
+
+            case 8:
+                cout << "\nHash Table Statistics\n";
+                cout << "Facilities stored: "
+                     << facilityTable.getFacCount() << endl;
+                cout << "Table capacity: "
+                     << facilityTable.getTableSize() << endl;
+                cout << "Total collisions: "
+                     << facilityTable.getColCount() << endl;
+                break;
+
+            case 9:
+                cout << "\nThank you for using Smart Campus Navigation!\n";
+                return 0;
+
+            default:
+                cout << "\nInvalid choice. Please select 1-9.\n";
+        }
+    }
 
     return 0;
 }
-
