@@ -1,0 +1,9 @@
+# Invalid department test file
+
+University|NONE
+Computer Science|University
+|University
+Engineering
+Mathematics|Unknown Department
+Computer Science|University
+Physics|NONE

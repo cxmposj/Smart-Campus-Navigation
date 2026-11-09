@@ -5,3 +5,10 @@
 Jose Campos - I handled the facility portion of the project, such as organizing the facility information and setting up how 
 records would be stored and accessed. I also worked on making sure the facility data followed the required format and validation rules.
 
+Rodney Amuebie:
+- Implemented the DepartmentTree class.
+- Added department loading, searching, and hierarchy management.
+- Implemented preorder, postorder, and level-order traversals.
+- Added department statistics, including total departments, leaves, and tree height.
+- Tested normal operations and error cases.
+- Documented all 12 DepartmentTree test results in testing_results.txt.

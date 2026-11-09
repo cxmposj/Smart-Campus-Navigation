@@ -1,38 +1,48 @@
+
 #ifndef DEPARTMENTTREE_H
 #define DEPARTMENTTREE_H
 
 #include <string>
 #include <vector>
+
 using namespace std;
 
-struct Department {                     // This stores a department and its child departments
+struct Department {
     string deptName;
     vector<Department*> children;
 };
 
-class DepartmentTree {                 // It handles the department tree and its operations
-    private:
-        Department* root;
+class DepartmentTree {
+private:
+    Department* root;
 
-        Department* findDept(Department* cur, string deptName) const;
-        string findParent(Department* cur, Department* target) const;           //Searches the tree, finds the parent and depth of a department
-        int findDepth(Department* cur, Department* target, int depth) const;
+    Department* findDept(Department* cur, string deptName) const;
+    string findParent(Department* cur, Department* target) const;
+    int findDepth(Department* cur, Department* target, int depth) const;
 
-        void showTree(Department* cur, int depth) const;
-        void preorder(Department* cur) const;           // Dislays, prints in preorder, and then deletes all nodes in the tree
-        void deleteTree(Department* cur);
-   
-    public:
-        DepartmentTree();                   // Creates an empty department tree and the bottom one deletes it
-        ~DepartmentTree();
+    void showTree(Department* cur, int depth) const;
+    void preorder(Department* cur) const;
+    void postorder(Department* cur) const;
+    void deleteTree(Department* cur);
 
-        void loadDepartments(string fileName);              // Loads and adds a department
-        bool addDept(string deptName, string parentName);
+    int countNodes(Department* cur) const;
+    int countLeaves(Department* cur) const;
+    int getHeight(Department* cur, int depth) const;
 
-        void searchDept(string deptName) const;         // This searches for the department and display the information
-        void displayTree() const;                  
-        void displayPreorder() const;           // Displays the department hierarchy and preorder traversal 
+public:
+    DepartmentTree();
+    ~DepartmentTree();
 
+    void loadDepartments(string fileName);
+    bool addDept(string deptName, string parentName);
+
+    void searchDept(string deptName) const;
+    void displayTree() const;
+    void displayPreorder() const;
+    void displayPostorder() const;
+    void displayLevelOrder() const;
+    void displayStats() const;
 };
 
 #endif
+

@@ -1,1 +1,69 @@
+Smart-Campus-Navigation/
+│
+├── data/
+│   ├── departments.txt
+│   ├── buildings.txt
+│   ├── connections.txt
+│   ├── facilities.txt
+│   ├── empty_departments.txt
+│   └── invalid_departments.txt
+│
+├── include/
+├── src/
+│   ├── CampusGraph.cpp
+│   └── DepartmentTree.cpp
+│
+├── tests/
+├── DepartmentTree.h
+├── main.cpp
+├── contributions.txt
+├── testing_results.txt
+└── README.md
+DEPARTMENT TREE TEST RESULTS
 
+Component: DepartmentTree
+Status: All manual tests passed
+
+1. Normal Department Loading - PASS
+   Loaded 7 departments successfully.
+
+2. Department Hierarchy Display - PASS
+   Correctly displayed parent-child relationships.
+
+3. Preorder Traversal - PASS
+   Displayed parents before children.
+
+4. Postorder Traversal - PASS
+   Displayed children before parents.
+
+5. Level-Order Traversal - PASS
+   Displayed departments level by level.
+
+6. Department Statistics - PASS
+   Total departments: 7
+   Leaf departments: 4
+   Tree height: 2
+
+7. Department Search - PASS
+   Found Computer Science.
+   Parent: College of Engineering
+   Children: 0
+   Depth: 2
+
+8. Search for Missing Department - PASS
+   Correctly reported that Business Administration was not found.
+
+9. Duplicate Department - PASS
+   Prevented adding a duplicate department.
+
+10. Unknown Parent - PASS
+    Prevented adding a department under an unknown parent.
+
+11. Empty Department File - PASS
+    Correctly handled an empty file.
+
+12. Invalid Department Records - PASS
+    Detected invalid formatting, empty names, unknown parents,
+    duplicate departments, and additional root records.
+
+OVERALL RESULT: ALL 12 TESTS PASSED
