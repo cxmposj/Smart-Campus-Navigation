@@ -22,11 +22,13 @@ The system uses campus information stored in text files. It organizes facility r
 - Perform preorder traversal of departments
 
 # How to Compile and Run
-g++
+VsCode terminal: g -I. -Iinclude src/DepartmentTree.cpp src/CampusGraph.cpp Facility.cpp HashTable.cpp main.cpp -o CampusNavigation
+
+UNT Terminal: g++ -std=c++17 -Wall DepartmentTree.cpp CampusGraph.cpp Facility.cpp HashTable.cpp main.cpp -o CampusNavigation
 
 Ran:
 
-./CampusNavigation
+.\CampusNavigation.exe
 
 # Testing
 The system is tested using the provided input files and additional test data to check facility searching, hash table collisions, graph traversal, department operations, and invalid input handling. 
