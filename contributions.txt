@@ -2,8 +2,14 @@
 
 # Team Contributions Milestone 1
 
-Jose Campos - I handled the facility portion of the project, such as organizing the facility information and setting up how 
-records would be stored and accessed. I also worked on making sure the facility data followed the required format and validation rules.
+Jose Campos:
+- Created the facility class to store facility information.
+- Made a custom hash table to keep track of facilities.
+- Added linear probing to handle collisions in the hash table. 
+- Implemented searching for facilities using their IDs. 
+- Added a way to display facilities in the order. 
+- Worked on loading and checking facility information from facilities.txt.
+- Tested the hash table and facility search. 
 
 Rodney Amuebie:
 - Implemented the DepartmentTree class.
