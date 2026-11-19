@@ -4,14 +4,14 @@
 
 using namespace std;
 
-Facility::Facility() {
+Facility::Facility() {        //The default constructor of the facility information
     facID = "";
     facName = "";
     buildingName = "";
     facCategory = "";
 }
 
-Facility::Facility(string newID, string newName, string newBuilding, string newCategory) {
+Facility::Facility(string newID, string newName, string newBuilding, string newCategory) {      //The constuctor that saves the details about the facility
     facID = newID;
     facName = newName;
     buildingName = newBuilding;
@@ -19,22 +19,22 @@ Facility::Facility(string newID, string newName, string newBuilding, string newC
 }
 
 string Facility::getFacID() const {
-    return facID;
+    return facID;                                // Returns the ID of the facility
 }
 
 string Facility::getFacName() const {
     return facName;
 }
 
-string Facility::getBuildingName() const {
+string Facility::getBuildingName() const {        // Gets the name and returns the name
     return buildingName;
 }
 
-string Facility::getFacCategory() const {
+string Facility::getFacCategory() const {         // Gets the category of the facility
     return facCategory;
 }
-
-void Facility::displayFacility() const {
+    
+void Facility::displayFacility() const {            // This would display all the stored facility details
     cout << "Facility ID: " << facID << endl;
     cout << "Facility Name: " << facName << endl;
     cout << "Building: " << buildingName << endl;
