@@ -154,23 +154,30 @@ void loadFacilities(HashTable& table, const CampusGraph& graph, vector<Facility>
 // Displays the main menu.
 void displayMenu() {
     cout << "\n========== SMART CAMPUS NAVIGATION ==========\n";
-    cout << "1. Display department hierarchy\n";
-    cout << "2. Search for a department\n";
-    cout << "3. Display campus buildings and connections\n";
-    cout << "4. Display building statistics\n";
-    cout << "5. Find reachable buildings\n";
-    cout << "6. Display all facilities\n";
-    cout << "7. Search for a facility by ID\n";
-    cout << "8. Search for a facility by name\n";
-    cout << "9. Search for facilities by category\n";
-    cout << "10. Display hash table statistics\n";
-    cout << "11. Exit\n";
+    cout << "1. View all facilities\n";
+    cout << "2. Search facility by ID\n";
+    cout << "3. Search facility by name\n";
+    cout << "4. Searcn facility by category\n";
+    cout << "5. View campus graph\n";
+    cout << "6. Display graph counts and degrees\n";
+    cout << "7. Find reachable buildings (BFS)\n";
+    cout << "8. Find shortest path (BFS)\n";
+    cout << "9. Add department\n";
+    cout << "10. Search department\n";
+    cout << "11. Display department hierachy\n";
+    cout << "12. Preorder traversal\n";
+    cout << "13. Postorder traversal\n";
+    cout << "14. Level-order traversal\n";
+    cout << "15. Department statistics\n";
+    cout << "16. Facility category report\n";
+    cout << "17. Graph connectivity report\n";    
+    cout << "18. Exit\n";
     cout << "Enter your choice: ";
 }
 
 void displayCategoryReport(const vector<Facility>& facilities) {
 
-    cout << "\n"Facility Category Report\n";
+    cout << "\nFacility Category Report\n";
 
     if (facilities.empty()) {
         cout << "No facilities available.\n";
@@ -370,7 +377,7 @@ int main() {
                         currentName[j] = tolower((unsigned char)currentName[j]);
                     }
                     if (currentName.find(facilityName) != string::npos) {
-                        cout << "\nFacility Found\n;"
+                        cout << "\nFacility Found\n";
                         facilities[i].displayFacility();
                         foundCount++;
                     }
