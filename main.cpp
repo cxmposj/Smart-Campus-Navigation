@@ -11,6 +11,7 @@
 #include <vector>
 #include <limits>
 #include <cctype>
+#include <iomanip>
 
 using namespace std;
 
@@ -165,6 +166,53 @@ void displayMenu() {
     cout << "10. Display hash table statistics\n";
     cout << "11. Exit\n";
     cout << "Enter your choice: ";
+}
+
+void displayCategoryReport(const vector<Facility>& facilities) {
+
+    cout << "\n"Facility Category Report\n";
+
+    if (facilities.empty()) {
+        cout << "No facilities available.\n";
+        cout << "Total facilities: 0\n";
+        return;
+    }
+    vector<string> categories;
+    vector<int> categoryCounts;
+
+    for (int i = 0; i < facilities.size(); i++) {
+
+        string currentCategory = facilities[i].getFacCategory();
+
+        for (int j = 0; j < currentCategory.length(); j++) {
+            currentCategory[j] = tolower((unsigned char)currentCategory[j]);
+        }
+    bool found = false;
+
+    for (int j = 0; j < categories.size(); j++) {
+        string storedCategory = categories[j];
+
+    for (int k = 0; k < storedCategory.length(); k++) {
+        storedCategory[k] = tolower((unsigned char)storedCategory[k]);
+    }
+    if (currentCategory == storedCategory) {
+        categoryCounts[j]++;
+        found = true;
+        break;
+    }
+ }
+    if (!found) {
+        categories.push_back(facilities[i].getFacCategory());
+        categoryCounts.push_back(1);
+    }
+}
+    for (int i = 0; i < categories.size(); i++) {
+        double percentage = (double)categoryCounts[i]/facilities.size() * 100;
+    cout << categories[i] << ": " << categoryCounts[i] << " (" << fixed << setprecision(1)
+         << percentage << "%)" << endl;
+    }
+
+    cout << "Total facilities: " << facilities.size() << endl;
 }
 
 int main() {
