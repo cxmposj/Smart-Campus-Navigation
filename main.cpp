@@ -269,42 +269,6 @@ int main() {
         switch (choice) {
 
             case 1:
-                cout << "\nDepartment Hierarchy\n";
-                departmentTree.displayTree();
-                break;
-
-            case 2: {
-                string departmentName;
-
-                cout << "Enter department name: ";
-                getline(cin, departmentName);
-
-                departmentTree.searchDept(departmentName);
-                break;
-            }
-
-            case 3:
-                cout << "\nCampus Buildings and Connections\n";
-                campusGraph.displayGraph(cout);
-                break;
-
-            case 4:
-                cout << "\nBuilding Statistics\n";
-                campusGraph.displayCountsAndDegrees(cout);
-                break;
-
-            case 5: {
-                string buildingName;
-
-                cout << "Enter starting building: ";
-                getline(cin, buildingName);
-
-                cout << "\nReachable Buildings\n";
-                campusGraph.displayReachable(buildingName, cout);
-                break;
-            }
-
-            case 6:
                 cout << "\nAll Campus Facilities\n";
 
                 if (facilities.empty()) {
@@ -318,7 +282,7 @@ int main() {
                 }
                 break;
 
-            case 7: {
+            case 2: {
                 string facilityID;
 
                 cout << "Enter facility ID: ";
@@ -351,7 +315,7 @@ int main() {
             break;
         }
 
-            case 8: {                                    // This searches for a facility by name
+            case 3: {                                    // This searches for a facility by name
                 string facilityName;
 
                 cout << "Enter facility name: ";
@@ -392,7 +356,7 @@ int main() {
                 break;
             }
         
-            case 9: {
+            case 4: {
                 string category;
 
                 cout << "Enter facility category: ";
@@ -432,18 +396,82 @@ int main() {
 
                 break;
             }
-        
-            case 10:
-                cout << "\nHash Table Statistics\n";
-                cout << "Facilities stored: "
-                     << facilityTable.getFacCount() << endl;
-                cout << "Table capacity: "
-                     << facilityTable.getTableSize() << endl;
-                cout << "Total collisions: "
-                     << facilityTable.getColCount() << endl;
+
+            case 5: 
+                cout << "\nCampus Buildings and Connections\n";
+                campusGraph.displayGraph(cout);
                 break;
 
-            case 11:
+            case 6: 
+                cout << "\nBuilding Statistics\n";
+                campusGraph.displayCountsAndDegrees(cout);
+                break;
+
+            case 7: {
+                string buildingName;
+
+                cout << "Enter starting building: ";
+                getline(cin, buildingName);
+
+                cout << "\nReachable Buildings\n";
+                campusGraph.displayReachable(buildingName, cout);
+                break;
+            }
+
+            case 8: {                                 // Find shortest path (BFS)
+
+                break;
+            }
+
+            case 9: {                        // Add the department displaymenu
+
+                break;
+            }
+
+            case 10: {
+                string departmentName;
+
+                cout << "Enter department name: ";
+                getline(cin, departmentName);
+
+                departmentTree.searchDept(departmentName);
+                break;
+            }
+
+            case 11: 
+                cout << "\nDepartment Hierarchy\n";
+                departmentTree.displayTree();
+                break;
+
+            case 12: {                                    // For preorder traversal
+
+                break;
+            }
+
+            case 13: {                                    // This is for the postorder traversal
+
+                break;
+            }
+
+            case 14: {                                    // The level-order traversal displaymenu
+
+                break;
+            }
+
+            case 15: {                                    // The department statistics
+                
+                break;
+            }
+
+            case 16: 
+                displayCategoryReport(facilities);
+                break;
+            
+            case 17: {                                    //This is the graph connectivity report case on displaymenu
+                break;
+            }
+            
+            case 18:
                 cout << "\nThank you for using Smart Campus Navigation!\n";
                 return 0;
 
