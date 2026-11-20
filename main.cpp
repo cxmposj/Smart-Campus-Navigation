@@ -54,6 +54,7 @@ void loadFacilities(HashTable& table, const CampusGraph& graph, vector<Facility>
 
     if (!file.is_open()) {
         cout << "Error: Could not open data/facilities.txt" << endl;
+        return;
     }
     else {
         while (getline(file, line)) {
@@ -157,14 +158,14 @@ void displayMenu() {
     cout << "1. View all facilities\n";
     cout << "2. Search facility by ID\n";
     cout << "3. Search facility by name\n";
-    cout << "4. Searcn facility by category\n";
+    cout << "4. Search facility by category\n";
     cout << "5. View campus graph\n";
     cout << "6. Display graph counts and degrees\n";
     cout << "7. Find reachable buildings (BFS)\n";
     cout << "8. Find shortest path (BFS)\n";
     cout << "9. Add department\n";
     cout << "10. Search department\n";
-    cout << "11. Display department hierachy\n";
+    cout << "11. Display department hierarchy\n";
     cout << "12. Preorder traversal\n";
     cout << "13. Postorder traversal\n";
     cout << "14. Level-order traversal\n";
@@ -476,7 +477,7 @@ int main() {
                 return 0;
 
             default:
-                cout << "\nInvalid choice. Please select 1-9.\n";
+                cout << "\nInvalid choice. Please select 1-18.\n";
         }
     }
 
