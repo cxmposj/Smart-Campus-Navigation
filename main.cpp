@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include <limits>
+#include <cctype>
 
 using namespace std;
 
@@ -39,34 +40,40 @@ vector<string> splitFacilityLine(const string& line) {
     return fields;
 }
 
-// Loads facilities into the hash table.
-void loadFacilities(HashTable& table, const CampusGraph& graph) {
+// Loads facilities into the hash table and the facility list.
+void loadFacilities(HashTable& table, const CampusGraph& graph, vector<Facility>& facilities) {
     ifstream file("data/facilities.txt");
 
-    if (!file.is_open()) {
-        cout << "Error: Could not open data/facilities.txt\n";
-        return;
-    }
+    facilities.clear();
 
     string line;
     int loaded = 0;
     int rejected = 0;
     int lineNumber = 0;
 
-    while (getline(file, line)) {
-        lineNumber++;
+    if (!file.is_open()) {
+        cout << "Error: Could not open data/facilities.txt" << endl;
+    }
+    else {
+        while (getline(file, line)) {
+            lineNumber++;
 
-        line = trimText(line);
+            line = trimText(line);
 
-        if (line.empty() || line[0] == '#') {
+            if (line.empty() || line[0] == '#') {
             continue;
-        }
+            }
 
         vector<string> fields = splitFacilityLine(line);
 
-        if (fields.size() != 4) {
-            cout << "Warning: Invalid facility record on line "
-                 << lineNumber << ".\n";
+        if (fields.size() == 4 && fields[0] == "FacilityID" &&        //This would skip the facility file header
+            fields[1] == "FacilityName") {
+            continue;
+        }
+
+        if (fields.size() != 4) {                        
+            cout << "Warning: Invalid facility record in facilities.txt on line "
+                 << lineNumber << "." << endl;
             rejected++;
             continue;
         }
@@ -78,8 +85,23 @@ void loadFacilities(HashTable& table, const CampusGraph& graph) {
 
         if (facilityID.empty() || facilityName.empty() ||
             buildingName.empty() || category.empty()) {
-            cout << "Warning: Missing facility information on line "
-                 << lineNumber << ".\n";
+            cout << "Warning: Missing facility information in facilities.txt on line "
+                 << lineNumber << "." << endl;
+            rejected++;
+            continue;
+        }
+
+        for (int i = 0; i < facilityID.length(); i++) {            //It changes the facility ID to uppercase
+            facilityID[i] = toupper((unsigned char)facilityID[i]);
+        }
+
+        if(facilityID.length() != 4 || facilityID[0] != 'F' ||
+            !isdigit((unsigned char)facilityID[1]) ||
+            !isdigit((unsigned char)facilityID[2]) ||
+            !isdigit((unsigned char)facilityID[3])) {
+        
+        cout << "Warning: Invalid facility ID in facilities.txt on line "
+            << lineNumber << "." << endl;
             rejected++;
             continue;
         }
@@ -88,7 +110,7 @@ void loadFacilities(HashTable& table, const CampusGraph& graph) {
 
         if (!graph.findBuilding(buildingName, canonicalBuilding)) {
             cout << "Warning: Building not found for facility "
-                 << facilityID << ".\n";
+                 << facilityID << " in facilities.txt on line " << lineNumber << "." << endl;
             rejected++;
             continue;
         }
@@ -100,18 +122,32 @@ void loadFacilities(HashTable& table, const CampusGraph& graph) {
             category
         );
 
+        if (table.searchFac(facilityID) != nullptr) {            //This is used to check for duplicate facility IDs
+            cout << "Warning: Duplicate facility ID in facilities.txt on line " 
+                << lineNumber << "." << endl;
+            rejected++;
+            continue;
+        }
+
         if (table.addFac(facility)) {
+            facilities.push_back(facility);
             loaded++;
         } else {
             cout << "Warning: Could not add facility "
-                 << facilityID << ".\n";
+                 << facilityID << " from facilities.txt on line " << lineNumber << "." << endl;
             rejected++;
         }
     }
+}
 
     cout << "\nFacility loading complete.\n";
+    cout << "File: facilities.txt" << endl;
     cout << "Facilities loaded: " << loaded << endl;
     cout << "Facilities rejected: " << rejected << endl;
+    cout << "Table capacity: " << table.getTableSize() << endl;
+    cout << "Facilities stored: " << table.getFacCount() << endl;
+    cout << "Total collisions: " << table.getColCount() << endl;
+    
 }
 
 // Displays the main menu.
@@ -124,8 +160,10 @@ void displayMenu() {
     cout << "5. Find reachable buildings\n";
     cout << "6. Display all facilities\n";
     cout << "7. Search for a facility by ID\n";
-    cout << "8. Display hash table statistics\n";
-    cout << "9. Exit\n";
+    cout << "8. Search for a facility by name\n";
+    cout << "9. Search for facilities by category\n";
+    cout << "10. Display hash table statistics\n";
+    cout << "11. Exit\n";
     cout << "Enter your choice: ";
 }
 
@@ -148,9 +186,10 @@ int main() {
 
     // Initialize the facility hash table.
     HashTable facilityTable(101);
+    vector<Facility> facilities;
 
     cout << "\nLoading campus facilities...\n";
-    loadFacilities(facilityTable, campusGraph);
+    loadFacilities(facilityTable, campusGraph, facilities);
 
     int choice = 0;
 
@@ -212,10 +251,15 @@ int main() {
 
             case 6:
                 cout << "\nAll Campus Facilities\n";
-                facilityTable.displayTable();
 
-                if (facilityTable.getFacCount() == 0) {
+                if (facilities.empty()) {
                     cout << "No facilities are currently loaded.\n";
+                }
+                else {
+                    for (int i = 0; i < facilities.size(); i++){
+                        facilities[i].displayFacility();
+                    }
+                    cout << "Total facilities: " << facilities.size() << endl;
                 }
                 break;
 
@@ -225,19 +269,116 @@ int main() {
                 cout << "Enter facility ID: ";
                 getline(cin, facilityID);
 
-                Facility* facility = facilityTable.searchFac(facilityID);
+                facilityID = trimText(facilityID);        // This would remove any extra spaces
 
-                if (facility != nullptr) {
-                    cout << "\nFacility Found\n";
-                    facility->displayFacility();
-                } else {
-                    cout << "Facility not found.\n";
+                for (int i = 0; i < facilityID.length(); i++) {    // It changes the ID to uppercase
+                    facilityID[i] = toupper((unsigned char)facilityID[i]);
+                }
+
+                if(facilityID.length() != 4 || facilityID[0] != 'F' ||        //Checks if it follows the format
+                    !isdigit((unsigned char)facilityID[1]) || 
+                    !isdigit((unsigned char)facilityID[2]) ||
+                    !isdigit((unsigned char)facilityID[3])) {
+
+                    cout << "\nInvalid facility ID. Please use F followed by 3 digits.\n";
+                    break;
+            }
+
+            Facility* facility = facilityTable.searchFac(facilityID);
+
+            if (facility != nullptr) {
+                cout << "\nFacility Found\n";
+                facility->displayFacility();
+            }
+            else {
+                cout << "\nFacilityID " << facilityID << " was not found.\n";
+            }
+            break;
+        }
+
+            case 8: {                                    // This searches for a facility by name
+                string facilityName;
+
+                cout << "Enter facility name: ";
+                getline(cin, facilityName);
+
+                facilityName = trimText(facilityName);
+
+                if (facilityName.empty()) {
+                    cout << "\nPlease enter a facility name.\n";
+                    break;
+                }
+
+                for (int i = 0; i < facilityName.length(); i++) {             // It changes the search name to lowercase   
+                    facilityName[i] = tolower((unsigned char)facilityName[i]);
+                }
+
+                int foundCount = 0;
+
+                for (int i = 0; i < facilities.size(); i++) {
+                    string currentName = facilities[i].getFacName();
+
+                    for (int j = 0; j < currentName.length(); j++) {
+                        currentName[j] = tolower((unsigned char)currentName[j]);
+                    }
+                    if (currentName.find(facilityName) != string::npos) {
+                        cout << "\nFacility Found\n;"
+                        facilities[i].displayFacility();
+                        foundCount++;
+                    }
+                }
+                if (foundCount == 0){
+                    cout << "\nNo facilities found with that name.\n";
+                }
+                else {
+                    cout << "Total facilities found: " << foundCount << endl;
                 }
 
                 break;
             }
+        
+            case 9: {
+                string category;
 
-            case 8:
+                cout << "Enter facility category: ";
+                getline(cin, category);
+
+                category = trimText(category);
+
+                if (category.empty()) {
+                    cout << "\nPlease enter a facility category.\n";
+                    break;
+                }
+
+                for (int i = 0; i < category.length(); i++) {
+                    category[i] = tolower((unsigned char)category[i]);
+                }
+
+                int foundCount = 0;
+
+                for (int i = 0; i < facilities.size(); i++) {
+                    string currentCategory = facilities[i].getFacCategory();
+
+                    for (int j = 0; j < currentCategory.length(); j++) {
+                        currentCategory[j] = tolower((unsigned char)currentCategory[j]);
+                    }
+                    if (currentCategory == category) {
+                        cout << "\nFacility Found\n";
+                        facilities[i].displayFacility();
+                        foundCount++;
+                    }
+                }
+                if (foundCount == 0) {
+                    cout << "\nNo facilities found in that category.\n";
+                }
+                else {
+                    cout << "Total facilities found: " << foundCount << endl;
+                }
+
+                break;
+            }
+        
+            case 10:
                 cout << "\nHash Table Statistics\n";
                 cout << "Facilities stored: "
                      << facilityTable.getFacCount() << endl;
@@ -247,7 +388,7 @@ int main() {
                      << facilityTable.getColCount() << endl;
                 break;
 
-            case 9:
+            case 11:
                 cout << "\nThank you for using Smart Campus Navigation!\n";
                 return 0;
 
