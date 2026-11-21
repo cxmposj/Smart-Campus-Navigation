@@ -2,27 +2,46 @@
 
 # Project Design
 
-The project is divided into different parts to keep the campus information organized. Each class is responsible for handling its own information and functions. The main program connects these parts together and allows users to access the different features through the menu. 
+The project is divided into different parts to keep the campus information organized. Each class is responsible for handling its own information and functions. The main program connects these parts together and allows users to access the different features through the menu. This makes it easier to work with the campus information and keeps the different operations organized. 
 
 # Facility Records
 
-The Facility class is used to stored information about campus facilities. Each facility has an ID, name, building, and category. The class also includes functions to get and display the facility information. 
+The Facility class is used to stored information about campus facilities. Each facility has an ID, name, building, and category. The class also includes functions to get and display the facility information. In every facility is created with its own information, and is used by the program when displaying facilities or searching for a specific one. 
 
 # Hash Table
 
-The HashTable class is stored facilities based on their IDs. A custom hash function is used to find where each facility should be stored. When two IDs end up in the same position, linear probing is used to find another available position. The table also checks for duplicate IDs before adding a facility. 
+The HashTable class is stored facilities based on their IDs. A custom hash function is used to find where each facility should be stored. The function first converts the facility ID to uppercase and then adds the character values together. The total of it is divided by the table size to find the position where the facility belongs. Also in the hash table, it is created with 101 positions to store the facility information. 
+When two IDs end up in the same position, linear probing is used to find another available position. It would make the program to check the next position until it finds an empty one. The table also checks for duplicate IDs before adding a facility, so the same ID cannot be stored more than once when compiling. It keeps track of how many facilities are stored and how many collisions happen when a facility is added to the table. 
+
+# Facility Searching and Reports
+
+The program allows one to search for facilities by ID, name, and category. Searching by ID uses the hash table to look for the matching facility instead of going through the entire list. The program also checks whether the entered ID has the correct format before searching.
+Searching by name allows partial matches, so the user dn not have to enter the whole facility name. It would ignore any uppercase and lowercase differences. Searching by category looks for an exact category match and ignores captailization as well. Both searches display the matching facilities and the total number of results. 
+
+# Facility Category Report 
+
+The facility category report groups facilities based on their categories. It would display the number of facilities in each category and calculates the percentage for each one. Categories are grouped without considering of the uppercase and lowercase, so they are counted together even if their capitalization is different. In the report, it would display the total number of facilities. 
 
 # Campus Graph 
 
-The campus graph represented the buildings and how they connect to each other. Each building is stored as a vertex, and the connections between buildings are stored as edges. An adjacency list is used to keep track of which buildings are connected. The connections work in both directions.
+The campus graph represented the buildings and how they connect to each other. Each building is stored as a vertex, and the connections between buildings are stored as edges. An adjacency list is used to keep track of which buildings are connected. The connections work in both directions, so that a building can be reached from either side of the connection. 
 
 # BFS
 
-BFS is used to find which buildings can be reached from a starting building. It uses a queue to keep track of which building to visit next. The search visits nearby buildings first and then continues to the next ones. It also keeps track of the distance from the starting building. 
+BFS is used to find which buildings can be reached from a starting building. It uses a queue to keep track of which building to visit next. The search visits nearby buildings first and then continues to the next ones. It also keeps track of the buildings that have already been visited so they are not visited again. 
+The BFS keeps track of the distance from the starting building as it moves through the graph. It can also be used to find the shortest path between two buildings by following the available connections. This would help the user to see how the buildings are connected and how to get from one location to another. 
+
+# Graph Connectivity Report
+
+The graph connectivity report provides information about how the campus buildings are connected. It helps show if the buildings can reach other buildings through the available connections. It allows the user to get a better idea of how the campus is connected and whether there are separate groups of buildings. 
 
 # Department Tree
 
-The department tree organized the university departments and their parent departments. The University is at the top of the tree, and other departments are placed under their parent. The tree allows departments to be added and searched, and it can display the department hierarchy using preorder traversal. 
+The department tree organized the university departments and their parent departments. The University is at the top of the tree, and other departments are placed under their parent. This creates a hierarchy that shows how the different departments are organized. The tree allows departments to be added and searched, and it can display the department hierarchy using preorder traversal for the user to see how the departments are arranged under the university. 
+
+# Department Traversals and Statistics
+
+The department tree can display the departments using preorder, postorder, and level-order traversals. For each traversals goes through the tree in its own way and displays the departments based on their position. It gives the user different ways to view the department hierarchy. The statistics show information about the tree like the total number of departments, the number of leaf nodes, and the height of the tree, It helps show how the departments are arranged and gives more information. 
 
 # Input Files
 
@@ -32,8 +51,8 @@ The campus information is loaded from four text files provided for the project. 
   3. facilities.txt
   4. departments.txt
 
-Each files contains information needed for a different part of the system. The program reads the files and uses their information when displaying facilities, navigating buildings, and working with departments. 
+Each file contains information needed for a different part of the system. The program reads the files and uses their information when displaying facilities, navigating buildings, and working with departments. The information from these files is used throughout the program so the different features can work with the campus data. 
 
 # Project Organization 
 
-The project keeps the header files, source files, input files, and test files. This helps keep the code organized and makes it easier to find and update different parts of the project. 
+The project keeps the header files, source files, input files, and test files. This helps keep the code organized and makes it easier to find and update different parts of the project. The main program connects the classes and provides the menu for accessing the facility searches, campus navigation features, department operations, and the reports. 
