@@ -171,3 +171,24 @@ Facility not found.
 Facilities stored: 10
 Table capacity: 101
 Total collisions: 9
+
+
+
+# Program output:
+Add F001: 1
+Add F010: 1
+Add F004: 1
+Duplicate f001: 0
+Search f004: FOUND
+Search F099: NOT FOUND
+Facilities stored: 3
+Table capacity: 101
+Collisions: 1
+
+# Test Results:
+- Adding facilities: Passed
+- Duplicate ID rejection: Passed
+- Case-insensitive ID search: Passed
+- Facility not found search: Passed
+- Linear probing collision handling: Passed
+- Hash Table statistics: Passed
