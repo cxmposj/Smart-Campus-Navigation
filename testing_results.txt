@@ -175,20 +175,40 @@ Total collisions: 9
 
 
 # Program output:
-Add F001: 1
-Add F010: 1
-Add F004: 1
-Duplicate f001: 0
-Search f004: FOUND
-Search F099: NOT FOUND
-Facilities stored: 3
+Facility loading complete.
+File: facilities.txt
+Facilities loaded: 10
+Facilities rejected: 0
 Table capacity: 101
-Collisions: 1
+Facilities stored: 10
+Total collisions: 9
+
+Exact name search (room 101) : 2 matches
+Category search (classroom): 3 matches
+ID search (f004): FOUND
+ID Search (F099): NOT FOUND
+
+Facility Category Report
+Library: 2 (20.0%)
+Tutoring Center: 1 (10.0%)
+Student Services Office: 1 (10.0%)
+Computer Lab: 2 (20.0%)
+Classroom: 3 (30.0%)
+Recreation: 1 (10.0%)
+Total facilities: 10
+
+Hash table statistics
+Facilities stored: 10
+Table capacity: 101
+Total collisions: 9
 
 # Test Results:
-- Adding facilities: Passed
-- Duplicate ID rejection: Passed
-- Case-insensitive ID search: Passed
-- Facility not found search: Passed
-- Linear probing collision handling: Passed
+- Facility loading: Passed
+- ID search: Passed
+- Exact name search: Passed
+- Category search: Passed
+- Category report: Passed
 - Hash Table statistics: Passed
+- Collision handling: Passed
+
+
