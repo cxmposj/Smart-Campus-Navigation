@@ -1,4 +1,4 @@
-// Campus graph loading, display, and BFS reachability for Milestone 1.
+// Campus graph loading, reachability, shortest paths, and connectivity.
 // Author: Adeoluwa Olukotun
 #ifndef CAMPUS_GRAPH_H
 #define CAMPUS_GRAPH_H
@@ -59,6 +59,18 @@ public:
     // Displays the BFS result or a clear error; never reads menu input itself.
     bool displayReachable(const std::string& start, std::ostream& out) const;
 
+    // Returns a minimum-edge route, using neighbor insertion order to break ties.
+    // Failure clears path and provides an error; matching ignores case/outer spaces.
+    bool findShortestPath(const std::string& start, const std::string& destination,
+                          std::vector<std::string>& path, std::string& error) const;
+
+    // Prints one building per line followed by the number of connections.
+    bool displayShortestPath(const std::string& start, const std::string& destination,
+                             std::ostream& out) const;
+
+    // Includes all maximum-degree ties, isolated buildings, and component count.
+    void displayConnectivityReport(std::ostream& out) const;
+
 private:
     struct Building {
         std::string name;
@@ -74,3 +86,4 @@ private:
 };
 
 #endif
+
