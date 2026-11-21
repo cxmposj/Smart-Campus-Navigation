@@ -1,0 +1,5 @@
+FacilityID|FacilityName|BuildingName|Category
+F001|Main Reading Room|Library|Library
+F010|Research Help Desk|Library|Library
+F100|Study Area|Library|Classroom
+F002|Tutoring Center|Library|Tutoring Center
