@@ -1,0 +1,13 @@
+# Code Reviews
+
+# Review 1: Campus Graph
+Team Member: Jose Campos
+Code made by Adeoluwa Olukotun
+
+# Review Summary
+
+I reviewed the campus graph code to see how buildings and connections are added and how BFS works. I noticed that the code checks for duplicate buildings, duplicate connections, and buildings that do not exist. I also checked the BFS function because it uses a queue and keeps track of visited buildings so the same building is not visited more than once. 
+
+# Follow-Up
+
+The shortest-path and graph connectivity features were not shown in the CampusGraph.cpp file I looked through. I would like to check if those features are included in another file and make sure that they are connected to the main program. 
