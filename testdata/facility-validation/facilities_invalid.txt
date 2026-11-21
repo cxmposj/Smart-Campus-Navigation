@@ -1,0 +1,6 @@
+FacilityID|FacilityName|BuildingName|Category
+F011|Study Room|Library|Classroom
+1234|Invalid ID|Library|Classroom
+F012||Library|Classroom
+F013|Computer Lab|Unknown Building|Computer Lab
+F014|Tutoring Center|Library|Tutoring Center
