@@ -341,7 +341,7 @@ int main() {
                     for (int j = 0; j < currentName.length(); j++) {
                         currentName[j] = tolower((unsigned char)currentName[j]);
                     }
-                    if (currentName.find(facilityName) != string::npos) {
+                    if (currentName == facilityName) {
                         cout << "\nFacility Found\n";
                         facilities[i].displayFacility();
                         foundCount++;
