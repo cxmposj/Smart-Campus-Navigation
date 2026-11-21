@@ -1,0 +1,8 @@
+# Custom graph: a diamond, a separate pair, and an isolated building.
+Start Hall
+Alpha Hall
+Zeta Hall
+End Hall
+Annex East
+Annex West
+Lone Tower
