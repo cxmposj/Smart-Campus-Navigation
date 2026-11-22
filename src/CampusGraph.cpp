@@ -278,3 +278,128 @@ bool CampusGraph::displayReachable(const std::string& start, std::ostream& out) 
     out << "Reachable: " << result.size() << " of " << buildingCount() << " buildings\n";
     return true;
 }
+
+
+bool CampusGraph::findShortestPath(const std::string& start,
+                                   const std::string& destination,
+                                   std::vector<std::string>& path,
+                                   std::string& error) const {
+    path.clear();
+    error.clear();
+    if (trim(start).empty()) {
+        error = "Starting building must not be blank.";
+        return false;
+    }
+    if (trim(destination).empty()) {
+        error = "Destination building must not be blank.";
+        return false;
+    }
+    if (buildings_.empty()) {
+        error = "No buildings are loaded.";
+        return false;
+    }
+    const std::size_t source = findIndex(start);
+    const std::size_t target = findIndex(destination);
+    const std::size_t count = buildings_.size();
+    if (source == count) {
+        error = "Starting building not found: " + trim(start);
+        return false;
+    }
+    if (target == count) {
+        error = "Destination building not found: " + trim(destination);
+        return false;
+    }
+
+    // A parent is assigned only at first discovery, when the vertex is enqueued.
+    // FIFO visits layers in order, so that parent belongs to a shortest route.
+    std::vector<std::size_t> parent(count, count);
+    std::queue<std::size_t> pending;
+    parent[source] = source;
+    pending.push(source);
+    while (!pending.empty() && parent[target] == count) {
+        const std::size_t current = pending.front();
+        pending.pop();
+        for (std::size_t neighbor : buildings_[current].neighbors) {
+            if (parent[neighbor] == count) {
+                parent[neighbor] = current;
+                pending.push(neighbor);
+            }
+        }
+    }
+    if (parent[target] == count) {
+        error = "No path exists between " + buildings_[source].name +
+                " and " + buildings_[target].name + ".";
+        return false;
+    }
+    // Walk backward to the source, then put the route into travel order.
+    for (std::size_t current = target; ; current = parent[current]) {
+        path.push_back(buildings_[current].name);
+        if (current == source) break;
+    }
+    std::reverse(path.begin(), path.end());
+    return true;
+}
+
+bool CampusGraph::displayShortestPath(const std::string& start,
+                                      const std::string& destination,
+                                      std::ostream& out) const {
+    std::vector<std::string> path;
+    std::string error;
+    if (!findShortestPath(start, destination, path, error)) {
+        out << "Error: " << error << '\n';
+        return false;
+    }
+    out << "Shortest path:\n";
+    for (const std::string& name : path) out << name << '\n';
+    out << "Number of connections: " << path.size() - 1 << '\n';
+    return true;
+}
+
+void CampusGraph::displayConnectivityReport(std::ostream& out) const {
+    if (buildings_.empty()) out << "No buildings are loaded.\n";
+    out << "Total buildings: " << buildings_.size() << '\n'
+        << "Total connections: " << connectionCount_ << '\n';
+    std::size_t maximumDegree = 0;
+    for (const Building& building : buildings_) {
+        maximumDegree = std::max(maximumDegree, building.neighbors.size());
+    }
+    out << "Maximum degree: " << maximumDegree << '\n'
+        << "Buildings with maximum degree:\n";
+    if (buildings_.empty()) out << "None\n";
+    for (const Building& building : buildings_) {
+        if (building.neighbors.size() == maximumDegree) out << building.name << '\n';
+    }
+
+    out << "Isolated buildings:\n";
+    bool hasIsolated = false;
+    for (const Building& building : buildings_) {
+        if (building.neighbors.empty()) {
+            out << building.name << '\n';
+            hasIsolated = true;
+        }
+    }
+    if (!hasIsolated) out << "None\n";
+
+    // Each new BFS root starts one component, including a single isolated vertex.
+    std::size_t components = 0;
+    std::vector<bool> visited(buildings_.size(), false);
+    std::queue<std::size_t> pending;
+    for (std::size_t root = 0; root < buildings_.size(); ++root) {
+        if (visited[root]) continue;
+        ++components;
+        visited[root] = true;
+        pending.push(root);
+        while (!pending.empty()) {
+            const std::size_t current = pending.front();
+            pending.pop();
+            for (std::size_t neighbor : buildings_[current].neighbors) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    pending.push(neighbor);
+                }
+            }
+        }
+    }
+    out << "Connected components: " << components << '\n';
+}
+

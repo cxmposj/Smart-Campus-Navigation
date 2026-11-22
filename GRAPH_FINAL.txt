@@ -1,0 +1,188 @@
+Member 2 - Final graph functions
+Adeoluwa Olukotun
+
+Implementation
+CampusGraph keeps the existing undirected adjacency list. The new functions use
+that same graph, including the original building and neighbor insertion order.
+
+findShortestPath(start, destination, path, error) returns a shortest route.
+It uses a queue and a parent vector. An unset parent means a building has not
+been visited. The start is marked before entering the queue, and each neighbor
+is marked when it is enqueued. The first visit therefore gives the fewest
+connections. The route is reconstructed from destination to start using the
+parents, then reversed. Neighbor order decides between equally short routes.
+Names are trimmed and matched without case sensitivity. Display uses the
+original accepted spelling. Failed queries clear the output path.
+
+displayShortestPath(start, destination, out) prints one building per line and
+the number of connections, or an error. Same start and destination gives one
+building and zero connections. Different disconnected buildings give no path.
+
+displayConnectivityReport(out) prints the building and undirected connection
+counts, all highest-degree buildings, isolated buildings or None, and the
+number of components. It starts BFS from each still-unvisited building.
+An isolated building counts as one component. Empty graphs give zero totals
+and an explanatory message.
+
+Both new operations take O(V + E) time and O(V) extra space, assuming bounded
+building-name lengths. Endpoint lookup is linear and is included in that bound.
+The graph owns its storage through vectors; the searches use local vectors and
+queues. No separate graph copy or manual allocation is used.
+
+Shared menu handoff
+The shared src/main.cpp is not changed by this module update. At the reviewed
+main revision e8e43ca4f8cc5fd194d1113733d7db307644a767, cases 8 and 17 were empty.
+The integration owner can use these calls on the existing campusGraph object:
+
+case 8: {
+    std::string start, destination;
+    std::cout << "Starting building: ";
+    if (!std::getline(std::cin, start)) return 0;
+    if (start.find_first_not_of(" \t\r\n\f\v") == std::string::npos) {
+        std::cout << "Error: Starting building must not be blank.\n";
+        break;
+    }
+    std::cout << "Destination building: ";
+    if (!std::getline(std::cin, destination)) return 0;
+    campusGraph.displayShortestPath(start, destination, std::cout);
+    break;
+}
+case 17:
+    campusGraph.displayConnectivityReport(std::cout);
+    break;
+
+The standalone tests/graph_demo.cpp demonstrates options 5, 6, 7, 8, 17 and 0.
+It is a graph-only test driver, not a replacement for the team's main.cpp.
+The shared program still needs its integration owner to finish the menu and
+full-system tests. UI-7 requires 0 to exit; the reviewed shared menu used 18.
+Full project compilation and UNT CELL verification belong to the team integrator.
+
+Local verification - November 21, 2026
+Environment: macOS arm64, Apple Clang 21.0.0, C++11.
+All three graph-only targets built with no warnings using -Werror.
+AddressSanitizer and UndefinedBehaviorSanitizer reported no errors in these runs.
+This records sanitizer coverage, not a separate leak-check result or CELL run.
+The original M1 suite passed 10 groups and 2,667 checks.
+The Final suite passed 6 groups and 6,701 checks.
+The standalone menu passed 13 output checks, including recovery after bad input.
+
+Run from the repository root (c++ may be replaced with clang++ or g++):
+mkdir -p build graph-test-temp
+c++ -std=c++11 -Wall -Wextra -Wpedantic -Werror -g -fsanitize=address,undefined -fno-omit-frame-pointer -Iinclude src/CampusGraph.cpp tests/CampusGraphTests.cpp -o build/graph_m1_tests
+./build/graph_m1_tests graph-test-temp data
+c++ -std=c++11 -Wall -Wextra -Wpedantic -Werror -g -fsanitize=address,undefined -fno-omit-frame-pointer -Iinclude src/CampusGraph.cpp tests/CampusGraphFinalTests.cpp -o build/graph_final_tests
+./build/graph_final_tests data testdata/graph-final
+c++ -std=c++11 -Wall -Wextra -Wpedantic -Werror -g -fsanitize=address,undefined -fno-omit-frame-pointer -Iinclude src/CampusGraph.cpp tests/graph_demo.cpp -o build/graph_demo
+./build/graph_demo data
+
+Do not include tests/*.cpp in the full application build: each test driver has
+its own main function. The custom graph files are for graph_demo and graph
+tests; they do not supply facility or department fixtures.
+
+Graph test evidence for Section 10
+Each record lists input, expected result, actual result, and status.
+
+G01 - Sample shortest path
+Input: data files, Library to Engineering Building.
+Expected: Library, Student Union, Science Building, Engineering Building; 3.
+Actual: Exactly that route and 3 connections.
+Status: PASS.
+
+G02 - Sample tied shortest routes
+Input: Library to Gym.
+Expected: Library, Student Union, Gym; 2. Student Union is visited first.
+Actual: Exactly that route and 2 connections.
+Status: PASS.
+
+G03 - Custom tied routes
+Input: testdata/graph-final; Start Hall to End Hall and reverse.
+Expected: Both directions use Zeta Hall, whose connection was inserted first,
+even though Alpha Hall was loaded first and sorts first alphabetically.
+Actual: Both routes use Zeta Hall and have 2 connections.
+Status: PASS.
+
+G04 - Same start and destination
+Input: Library to Library, Observatory to Observatory, one-vertex graph A to A.
+Expected: One canonical building name and 0 connections.
+Actual: Each route contains the requested building and reports 0 connections.
+Status: PASS.
+
+G05 - Unknown endpoints
+Input: Unknown to South Hall; North Hall to Unknown; Unknown to Unknown.
+Expected: Identify the unknown start or destination, return failure, clear path.
+Actual: Appropriate endpoint errors and an empty path in each case.
+Status: PASS.
+
+G06 - Unreachable destination
+Input: Library to Observatory; Start Hall to Annex West in the custom fixture.
+Expected: No path; no leftover result from a previous successful query.
+Actual: No-path error and empty path.
+Status: PASS.
+
+G07 - Matching and blank input
+Input: " library " to "ENGINEERING BUILDING"; blank or whitespace endpoints;
+"North  Hall" when only "North Hall" exists.
+Expected: Ignore outer spaces and case, preserve internal spaces; reject blanks.
+Actual: Canonical route for the valid query; explanatory errors otherwise.
+Status: PASS.
+
+G08 - Sample connectivity
+Input: Instructor sample graph.
+Expected: 7 buildings, 6 connections, Student Union has maximum degree 3,
+Observatory is isolated, 2 components.
+Actual: All five results match.
+Status: PASS.
+
+G09 - Ties and multiple components
+Input: Custom fixture with diamond, separate pair, and isolated Lone Tower.
+Expected: 7 buildings, 5 connections, degree 2 tied by Start Hall, Alpha Hall,
+Zeta Hall and End Hall in that order; Lone Tower isolated; 3 components.
+Actual: Complete report matches exactly.
+Status: PASS.
+
+G10 - Empty, single-vertex, all-isolated, connected-cycle reports
+Input: Empty graph; A only; A/B/C without edges; triangle A-B-C-A.
+Expected: Component counts 0/1/3/1. All degree-zero ties included. Triangle
+reports all three degree-2 ties and None for isolated buildings.
+Actual: All complete report strings match expected output.
+Status: PASS.
+
+G11 - Independent algorithm comparison
+Input: Every one of the 64 undirected graphs on four vertices; all 16 ordered
+endpoint pairs per graph.
+Expected: BFS distances agree with a separate Floyd-Warshall distance oracle.
+Every path starts/ends correctly and uses existing edges; component counts agree.
+Actual: All 1,024 endpoint pairs and all 64 component comparisons pass.
+Status: PASS.
+
+G12 - Dynamic growth
+Input: Chain of 1,200 buildings.
+Expected: Complete 1,200-building route, 1,199 connections, one component.
+Actual: Route and report match.
+Status: PASS.
+
+G13 - M1 regression and graph file validation
+Input: Original CampusGraphTests suite; sample data and generated adversarial
+fixtures containing blanks, comments, malformed fields, duplicates, reversed
+edges, unknown names, self-edges, CRLF, outer whitespace and embedded # names.
+Empty/missing files, reloads, unknown BFS starts, isolated vertices, repeated BFS,
+and 1,200-building growth are also included.
+Expected: Reject invalid records with filename/line/reason, correct summaries,
+preserve neighbor order and canonical names, and recover without stale data.
+Actual: All 10 original groups pass; 2,667 checks evaluated.
+Status: PASS.
+
+G14 - Standalone menu and recovery
+Input: Options 5/6/7/8/17; sample path queries; blanks, abc, 8x, 999; valid
+Library-to-Gym query after errors; 0 exit.
+Expected: Correct reports/routes; invalid input errors; next valid query works;
+0 exits successfully.
+Actual: 13 output checks pass, including the valid route after errors.
+Status: PASS.
+
+Scope of this evidence
+These tests cover Member 2's graph module and standalone demonstration only.
+Facility searches/reports, department operations, shared-menu integration,
+the full Section 10 test record, and UNT CELL execution are not verified here.
+Jose's existing graph review identified the missing Final features. This update
+adds those functions; it does not claim that he has reviewed the new code.

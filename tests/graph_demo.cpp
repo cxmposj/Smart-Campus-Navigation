@@ -6,7 +6,7 @@
 #include <sstream>
 #include <string>
 
-// Loads only the graph files and exercises the assigned Milestone 1 options.
+// Loads only graph files and exercises Member 2's Final menu options.
 int main(int argc, char* argv[]) {
     if (argc > 2) {
         std::cerr << "Usage: graph_demo [data-directory]\n";
@@ -25,10 +25,12 @@ int main(int argc, char* argv[]) {
 
     while (true) {
         std::cout << "\nCampus Graph Demonstration\n"
-                  << "3. View campus graph\n"
-                  << "4. Display graph counts and degrees\n"
-                  << "5. Find reachable buildings (BFS)\n"
-                  << "0. Exit (10 also exits)\n"
+                  << "5. View campus graph\n"
+                  << "6. Display graph counts and degrees\n"
+                  << "7. Find reachable buildings (BFS)\n"
+                  << "8. Find shortest path (BFS)\n"
+                  << "17. Graph connectivity report\n"
+                  << "0. Exit\n"
                   << "Enter choice: ";
         std::string line;
         if (!std::getline(std::cin, line)) return 0;
@@ -39,21 +41,35 @@ int main(int argc, char* argv[]) {
             std::cout << "Error: Enter a valid menu number.\n";
             continue;
         }
-        if (choice == 0 || choice == 10) {
+        if (choice == 0) {
             std::cout << "Goodbye!\n";
             return 0;
         }
-        if (choice == 3) {
+        if (choice == 5) {
             graph.displayGraph(std::cout);
-        } else if (choice == 4) {
+        } else if (choice == 6) {
             graph.displayCountsAndDegrees(std::cout);
-        } else if (choice == 5) {
+        } else if (choice == 7) {
             std::cout << "Starting building: ";
             std::string start;
             if (!std::getline(std::cin, start)) return 0;
             graph.displayReachable(start, std::cout);
+        } else if (choice == 8) {
+            std::string start, destination;
+            std::cout << "Starting building: ";
+            if (!std::getline(std::cin, start)) return 0;
+            if (start.find_first_not_of(" \t\r\n\f\v") == std::string::npos) {
+                std::cout << "Error: Starting building must not be blank.\n";
+                continue;
+            }
+            std::cout << "Destination building: ";
+            if (!std::getline(std::cin, destination)) return 0;
+            graph.displayShortestPath(start, destination, std::cout);
+        } else if (choice == 17) {
+            graph.displayConnectivityReport(std::cout);
         } else {
-            std::cout << "Error: Choose 3, 4, 5, or an exit option.\n";
+            std::cout << "Error: Choose 5, 6, 7, 8, 17, or 0.\n";
         }
     }
 }
+
