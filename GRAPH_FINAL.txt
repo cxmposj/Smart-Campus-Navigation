@@ -29,33 +29,18 @@ building-name lengths. Endpoint lookup is linear and is included in that bound.
 The graph owns its storage through vectors; the searches use local vectors and
 queues. No separate graph copy or manual allocation is used.
 
-Shared menu handoff
-The shared src/main.cpp is not changed by this module update. At the reviewed
-main revision e8e43ca4f8cc5fd194d1113733d7db307644a767, cases 8 and 17 were empty.
-The integration owner can use these calls on the existing campusGraph object:
+Shared menu integration
+Option 8 in src/main.cpp now reads the starting and destination buildings and
+calls campusGraph.displayShortestPath(start, destination, cout). Blank starting
+names return to the menu immediately. End-of-input at either prompt exits cleanly.
+Option 17 calls campusGraph.displayConnectivityReport(cout) on the same graph.
+The existing graph display, degree counts and reachability remain options 5-7.
 
-case 8: {
-    std::string start, destination;
-    std::cout << "Starting building: ";
-    if (!std::getline(std::cin, start)) return 0;
-    if (start.find_first_not_of(" \t\r\n\f\v") == std::string::npos) {
-        std::cout << "Error: Starting building must not be blank.\n";
-        break;
-    }
-    std::cout << "Destination building: ";
-    if (!std::getline(std::cin, destination)) return 0;
-    campusGraph.displayShortestPath(start, destination, std::cout);
-    break;
-}
-case 17:
-    campusGraph.displayConnectivityReport(std::cout);
-    break;
-
-The standalone tests/graph_demo.cpp demonstrates options 5, 6, 7, 8, 17 and 0.
-It is a graph-only test driver, not a replacement for the team's main.cpp.
-The shared program still needs its integration owner to finish the menu and
-full-system tests. UI-7 requires 0 to exit; the reviewed shared menu used 18.
-Full project compilation and UNT CELL verification belong to the team integrator.
+The standalone tests/graph_demo.cpp is still a graph-only driver. It must not be
+linked into the full application because it has its own main function.
+Other menu operations, shared input handling and full-project CELL verification
+remain with the team integrator. The shared menu currently uses 18 to exit;
+UI-7 requires 0, which remains a separate integration fix.
 
 Local verification - November 21, 2026
 Environment: macOS arm64, Apple Clang 21.0.0, C++11.
@@ -182,7 +167,115 @@ Status: PASS.
 
 Scope of this evidence
 These tests cover Member 2's graph module and standalone demonstration only.
-Facility searches/reports, department operations, shared-menu integration,
-the full Section 10 test record, and UNT CELL execution are not verified here.
+Facility searches/reports, department operations, the full Section 10 test
+record, and UNT CELL execution are not verified here. The graph-specific shared
+menu checks are recorded below.
 Jose's existing graph review identified the missing Final features. This update
 adds those functions; it does not claim that he has reviewed the new code.
+
+Shared graph menu verification - November 22, 2026
+Built the current application locally using Apple Clang 21, C++11, and address/
+undefined-behavior sanitizers, then exercised only the graph menu integration.
+All 16 scenarios passed with no sanitizer diagnostics. Existing signed/unsigned
+comparison warnings remain in the shared driver and HashTable.cpp.
+These are local graph checks, not certification of the complete application.
+The custom and empty graph scenarios use isolated working folders with their
+own data/ directory because the shared data-directory argument is not implemented.
+Option 18 is used to exit in these checks because that is the current shared menu.
+
+M01 - shortest
+Input lines: '8\nLibrary\nEngineering Building\n18\n'
+Expected: Library -> Student Union -> Science Building -> Engineering Building -> Number of connections: 3
+Actual: All expected output present; exit 0; no sanitizer diagnostics
+Status: PASS.
+
+M02 - tie
+Input lines: '8\nLibrary\nGym\n18\n'
+Expected: Library -> Student Union -> Gym -> Number of connections: 2
+Actual: All expected output present; exit 0; no sanitizer diagnostics
+Status: PASS.
+
+M03 - same
+Input lines: '8\n library \nLIBRARY\n18\n'
+Expected: Library -> Number of connections: 0
+Actual: All expected output present; exit 0; no sanitizer diagnostics
+Status: PASS.
+
+M04 - isolated_same
+Input lines: '8\nObservatory\nObservatory\n18\n'
+Expected: Observatory -> Number of connections: 0
+Actual: All expected output present; exit 0; no sanitizer diagnostics
+Status: PASS.
+
+M05 - unknown_start
+Input lines: '8\nUnknown\nGym\n18\n'
+Expected: Starting building not found: Unknown
+Actual: All expected output present; exit 0; no sanitizer diagnostics
+Status: PASS.
+
+M06 - unknown_destination
+Input lines: '8\nLibrary\nUnknown\n18\n'
+Expected: Destination building not found: Unknown
+Actual: All expected output present; exit 0; no sanitizer diagnostics
+Status: PASS.
+
+M07 - unreachable
+Input lines: '8\nLibrary\nObservatory\n18\n'
+Expected: No path exists between Library and Observatory.
+Actual: All expected output present; exit 0; no sanitizer diagnostics
+Status: PASS.
+
+M08 - blank_start
+Input lines: '8\n \n17\n18\n'
+Expected: Starting building must not be blank.; Connected components: 2
+Actual: All expected output present; exit 0; no sanitizer diagnostics
+Status: PASS.
+
+M09 - blank_destination
+Input lines: '8\nLibrary\n\n17\n18\n'
+Expected: Destination building must not be blank.; Connected components: 2
+Actual: All expected output present; exit 0; no sanitizer diagnostics
+Status: PASS.
+
+M10 - report
+Input lines: '17\n18\n'
+Expected: Total buildings: 7; Total connections: 6; Maximum degree: 3; Buildings with maximum degree: -> Student Union -> ; Isolated buildings: -> Observatory -> ; Connected components: 2
+Actual: All expected output present; exit 0; no sanitizer diagnostics
+Status: PASS.
+
+M11 - custom_route
+Input lines: '8\nStart Hall\nEnd Hall\n18\n'
+Expected: Start Hall -> Zeta Hall -> End Hall -> Number of connections: 2
+Actual: All expected output present; exit 0; no sanitizer diagnostics
+Status: PASS.
+
+M12 - custom_report
+Input lines: '17\n18\n'
+Expected: Total buildings: 7; Total connections: 5; Buildings with maximum degree: -> Start Hall -> Alpha Hall -> Zeta Hall -> End Hall -> ; Isolated buildings: -> Lone Tower -> ; Connected components: 3
+Actual: All expected output present; exit 0; no sanitizer diagnostics
+Status: PASS.
+
+M13 - empty_graph
+Input lines: '8\nA\nB\n17\n18\n'
+Expected: No buildings are loaded.; Total buildings: 0; Total connections: 0; Connected components: 0
+Actual: All expected output present; exit 0; no sanitizer diagnostics
+Status: PASS.
+
+M14 - repeated_after_error
+Input lines: '8\nUnknown\nLibrary\n8\nLibrary\nGym\n17\n7\nLibrary\n18\n'
+Expected: Starting building not found: Unknown; Library -> Student Union -> Gym -> Number of connections: 2; Connected components: 2; Reachable: 6 of 7 buildings
+Actual: All expected output present; exit 0; no sanitizer diagnostics
+Status: PASS.
+
+M15 - eof_at_start
+Input lines: '8\n'
+Expected: Starting building:
+Actual: All expected output present; exit 0; no sanitizer diagnostics
+Status: PASS.
+
+M16 - eof_at_destination
+Input lines: '8\nLibrary\n'
+Expected: Destination building:
+Actual: All expected output present; exit 0; no sanitizer diagnostics
+Status: PASS.
+

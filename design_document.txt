@@ -28,12 +28,11 @@ The campus graph represented the buildings and how they connect to each other. E
 
 # BFS
 
-BFS is used to find which buildings can be reached from a starting building. It uses a queue to keep track of which building to visit next. The search visits nearby buildings first and then continues to the next ones. It also keeps track of the buildings that have already been visited so they are not visited again. 
-The BFS keeps track of the distance from the starting building as it moves through the graph. It can also be used to find the shortest path between two buildings by following the available connections. This would help the user to see how the buildings are connected and how to get from one location to another. 
+BFS uses a queue and marks each building when it enters the queue. Reachability displays the buildings in visit order and their distance from the start. The shortest-path function also records each building's parent when it is first visited. It follows the parents from the destination back to the start and reverses that sequence to print the route. Neighbors stay in connection-file order, so ties are resolved consistently. Names ignore case and outer spaces; the original building spelling is used in the output. The same starting and destination building gives zero connections, and a disconnected destination gives a no-path message. Shared menu option 8 calls displayShortestPath on the existing campus graph.
 
 # Graph Connectivity Report
 
-The graph connectivity report provides information about how the campus buildings are connected. It helps show if the buildings can reach other buildings through the available connections. It allows the user to get a better idea of how the campus is connected and whether there are separate groups of buildings. 
+Shared menu option 17 calls displayConnectivityReport on the same graph. It shows total buildings, connections counted once, every building tied for highest degree, isolated buildings or None, and the number of connected components. A new BFS starts at each unvisited building to count components, including isolated buildings. Empty graphs show a message and zero totals. Both shortest-path search and connectivity reporting take O(V + E) time and O(V) extra space, assuming bounded building-name lengths.
 
 # Department Tree
 

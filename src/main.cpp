@@ -420,7 +420,16 @@ int main() {
             }
 
             case 8: {                                 // Find shortest path (BFS)
-
+                string start, destination;
+                cout << "Starting building: ";
+                if (!getline(cin, start)) return 0;
+                if (trimText(start).empty()) {
+                    cout << "Error: Starting building must not be blank.\n";
+                    break;
+                }
+                cout << "Destination building: ";
+                if (!getline(cin, destination)) return 0;
+                campusGraph.displayShortestPath(start, destination, cout);
                 break;
             }
 
@@ -469,6 +478,7 @@ int main() {
                 break;
             
             case 17: {                                    //This is the graph connectivity report case on displaymenu
+                campusGraph.displayConnectivityReport(cout);
                 break;
             }
             
