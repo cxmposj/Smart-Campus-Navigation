@@ -29,6 +29,9 @@ Adeoluwa Olukotun:
 - Implemented BFS to show reachable buildings and their distances from the starting building.
 - Added a separate graph demo and tests for valid data, invalid files, isolated buildings, repeated searches, and larger graphs. All 10 local test groups passed.
 - Added the graph code, tests, and sample validation files through a pull request that was merged into main.
+- Added Final BFS shortest-path search with parent tracking and path reconstruction.
+- Added the graph connectivity report with all maximum-degree ties, isolated buildings, and component counts.
+- Added custom route fixtures and Final tests; all 6 Final groups and the 10 original graph groups passed locally.
 
-
+For the Final, I worked on shortest paths and the graph connectivity report. The route search uses BFS and keeps neighbor insertion order when two paths have the same length. I checked the graph functions and menu handoff against Jose's review, which pointed out that these features were still missing. I also fixed the empty-graph report so it clearly says no buildings are loaded, and added tests for that case, disconnected buildings, tied paths, and repeated searches. The shared menu integration and full-project CELL testing are still separate from these graph-only checks.
 
