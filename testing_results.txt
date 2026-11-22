@@ -174,7 +174,7 @@ Total collisions: 9
 
 
 
-# Program output:
+# Jose's Program output:
 Facility loading complete.
 File: facilities.txt
 Facilities loaded: 10
