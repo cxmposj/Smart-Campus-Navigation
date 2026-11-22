@@ -1,0 +1,6 @@
+# Zeta is connected first even though Alpha was loaded first.
+Start Hall|Zeta Hall
+Start Hall|Alpha Hall
+Zeta Hall|End Hall
+Alpha Hall|End Hall
+Annex East|Annex West
