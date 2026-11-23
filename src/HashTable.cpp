@@ -1,3 +1,4 @@
+//Author: Jose Campos
 #include "HashTable.h"
 #include <iostream>
 #include <cctype>
