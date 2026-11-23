@@ -1,3 +1,4 @@
+//Author: Jose Campos
 #ifndef FACILITY_H
 #define FACILITY_H
 #include <string>
