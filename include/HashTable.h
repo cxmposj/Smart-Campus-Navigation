@@ -1,3 +1,4 @@
+//Author: Jose Campos
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
 
